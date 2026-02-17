@@ -1,1 +1,46 @@
-index.html
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Prendre une photo</title>
+  <style>
+    body { font-family: Arial, sans-serif; padding: 16px; text-align: center; }
+    video, img { width: 100%; max-width: 400px; border-radius: 12px; margin-top: 12px; }
+    button { padding: 12px 16px; margin-top: 10px; border-radius: 10px; border: none; background: #000; color: #fff; font-size: 16px; }
+  </style>
+</head>
+<body>
+
+<h2>Prendre une photo</h2>
+<p>Autorise la caméra puis clique sur le bouton.</p>
+
+<button onclick="startCamera()">Activer la caméra</button>
+<button onclick="takePhoto()">Prendre la photo</button>
+
+<video id="video" autoplay playsinline></video>
+<canvas id="canvas" style="display:none;"></canvas>
+<img id="photo">
+
+<script>
+let stream;
+
+async function startCamera() {
+  stream = await navigator.mediaDevices.getUserMedia({ video: true });
+  document.getElementById('video').srcObject = stream;
+}
+
+function takePhoto() {
+  const video = document.getElementById('video');
+  const canvas = document.getElementById('canvas');
+  const photo = document.getElementById('photo');
+
+  canvas.width = video.videoWidth;
+  canvas.height = video.videoHeight;
+  canvas.getContext('2d').drawImage(video, 0, 0);
+  photo.src = canvas.toDataURL('image/png');
+}
+</script>
+
+</body>
+</html>
